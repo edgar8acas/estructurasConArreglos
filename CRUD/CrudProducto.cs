@@ -19,32 +19,14 @@ namespace CRUD
 
         public void Agregar(Producto producto)
         {
-            
             if(_cantidad < _productos.Length)  //Comprueba si el vector aún tiene espacio.
             {
-                int i = 0;
-                bool added = false; //Bandera del ciclo, verdadera en caso de que el producto se añada.
-                while (!added)
-                {
-                    if (_productos[i] == null) //En caso de vector vacío.
-                    {
-                        _productos[i] = producto;
-                        added = true;
-                        _cantidad++;
-                    }
-                    else
-                    {
-                        //Si el elemento de la posición es mayor al nuevo, se inserta, en lugar de añadirse.
-                        if (_productos[i].Codigo > producto.Codigo) 
-                        {
-                            Insertar(producto, i);
-                            added = true;
-                            _cantidad++;
-                        }
-                        else if (_productos[i].Codigo == producto.Codigo) { break; }
-                    }
-                    i++;
-                }
+                _productos[_cantidad] = producto;
+                _cantidad++;
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Vector lleno.");
             }
         }
 
@@ -62,49 +44,31 @@ namespace CRUD
 
         public void Insertar(Producto producto, int posicion)
         {
-            Recorrer(posicion, true);
+            Recorrer(posicion);
             _productos[posicion] = producto;
             _cantidad++;
         }
 
-        private void Recorrer(int posicion, bool direccion /*false -> izq, true -> der*/)
+        private void Recorrer(int posicion) 
         {
-            if (direccion) //Derecha
+            /*Recorre a la derecha*/
+            for (int i = 14; i > posicion; i--)
             {
-                for (int i = 14; i > posicion; i--)
-                {
-                    _productos[i] = _productos[i - 1];
-                }
-            } else 
-            {
-                for (int i = posicion; i < 15 ; i++)
-                {
-                    _productos[i] = _productos[i + 1];
-                }
+                _productos[i] = _productos[i - 1];
             }
+            
         }
 
         public void Eliminar(int codigo)
         {
-            //La posición en el vector del valor eliminado
-            int posicion = 0;
-
             //Ciclo para encontrar el elemento a eliminar
             for (int i = 0; i < 15; i++)
             {
                 if(_productos[i].Codigo == codigo)
                 {
                     _productos[i] = null;
-
-                    //Se guarda la posición
-                    posicion = i; 
-                    break;
                 }
             }
-
-            //Recorrer hacia la izquierda.
-            Recorrer(posicion, false);
-            
         }
 
         public string Listar()
